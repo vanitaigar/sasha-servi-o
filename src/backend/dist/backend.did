@@ -1,0 +1,241 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserProfileInput = 
+ record {
+   email: text;
+   name: text;
+   photoUrl: ExternalBlob;
+   role: Role;
+ };
+type UserProfile = 
+ record {
+   createdAt: Timestamp;
+   email: text;
+   id: principal;
+   isActive: bool;
+   name: text;
+   photoUrl: ExternalBlob;
+   role: Role;
+ };
+type TransactionType = 
+ variant {
+   EXPENSE;
+   INCOME;
+ };
+type TransactionInput = 
+ record {
+   amount: float64;
+   category: text;
+   department: Department;
+   notes: text;
+   transactionType: TransactionType;
+ };
+type Transaction = 
+ record {
+   amount: float64;
+   category: text;
+   createdBy: principal;
+   date: Timestamp;
+   department: Department;
+   id: nat;
+   notes: text;
+   transactionType: TransactionType;
+ };
+type Timestamp = int;
+type Role = 
+ variant {
+   ADMIN;
+   EMPLOYEE;
+   OWNER;
+ };
+type ReviewInput = 
+ record {
+   comments: text;
+   employeeId: nat;
+   score: float64;
+ };
+type Review = 
+ record {
+   comments: text;
+   date: int;
+   employeeId: nat;
+   id: nat;
+   reviewedBy: principal;
+   score: float64;
+ };
+type ReportPeriod = 
+ variant {
+   DAILY;
+   MONTHLY;
+   WEEKLY;
+   YEARLY;
+ };
+type Report = 
+ record {
+   department: opt Department;
+   expense: float64;
+   from: Timestamp;
+   income: float64;
+   period: ReportPeriod;
+   profit: float64;
+   to: Timestamp;
+ };
+type NotificationInput = 
+ record {
+   message: text;
+   title: text;
+   userId: principal;
+ };
+type Notification = 
+ record {
+   createdAt: int;
+   id: nat;
+   isRead: bool;
+   message: text;
+   title: text;
+   userId: principal;
+ };
+type MeetingInput = 
+ record {
+   date: int;
+   description: text;
+   participants: vec principal;
+   title: text;
+ };
+type Meeting = 
+ record {
+   createdBy: principal;
+   date: int;
+   description: text;
+   id: nat;
+   participants: vec principal;
+   title: text;
+ };
+type LocationInput = 
+ record {
+   gpsLat: float64;
+   gpsLng: float64;
+   name: text;
+   radius: float64;
+ };
+type Location = 
+ record {
+   gpsLat: float64;
+   gpsLng: float64;
+   id: nat;
+   name: text;
+   radius: float64;
+ };
+type ExternalBlob = blob;
+type EmployeeProfileInput = 
+ record {
+   department: Department;
+   position: text;
+   salary: float64;
+   userId: principal;
+ };
+type EmployeeProfile = 
+ record {
+   department: Department;
+   id: nat;
+   performanceScore: float64;
+   position: text;
+   salary: float64;
+   userId: principal;
+ };
+type Department = 
+ variant {
+   BAR;
+   BARBERSHOP;
+   GAS_STATION;
+ };
+type AttendanceRecord = 
+ record {
+   checkIn: int;
+   checkOut: opt int;
+   gpsLat: float64;
+   gpsLng: float64;
+   id: nat;
+   userId: principal;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControl: () -> ();
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  assignUserRole: (id: principal, role: Role) -> (bool);
+  checkIn: (gpsLat: float64, gpsLng: float64) -> (AttendanceRecord);
+  checkOut: () -> (opt AttendanceRecord);
+  createEmployeeProfile: (input: EmployeeProfileInput) -> (EmployeeProfile);
+  createLocation: (input: LocationInput) -> (Location);
+  createMeeting: (input: MeetingInput) -> (Meeting);
+  createUser: (id: principal, input: UserProfileInput) -> (UserProfile);
+  deactivateUser: (id: principal) -> (bool);
+  deleteEmployeeProfile: (id: nat) -> (bool);
+  deleteLocation: (id: nat) -> (bool);
+  deleteMeeting: (id: nat) -> (bool);
+  deleteNotification: (id: nat) -> (bool);
+  deleteTransaction: (id: nat) -> (bool);
+  generateReport: (period: ReportPeriod, department: opt Department, from:
+   Timestamp, to: Timestamp) -> (Report) query;
+  getAttendanceRecord: (id: nat) -> (opt AttendanceRecord) query;
+  getCallerUserProfile: () -> (opt UserProfile) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getEmployeeProfile: (id: nat) -> (opt EmployeeProfile) query;
+  getLocation: (id: nat) -> (opt Location) query;
+  getMeeting: (id: nat) -> (opt Meeting) query;
+  getTransaction: (id: nat) -> (opt Transaction) query;
+  getUserProfile: (userId: principal) -> (opt UserProfile) query;
+  isCallerAdmin: () -> (bool) query;
+  listAllAttendance: () -> (vec AttendanceRecord) query;
+  listAttendanceByUser: (userId: principal) -> (vec AttendanceRecord) query;
+  listEmployees: () -> (vec EmployeeProfile) query;
+  listEmployeesByDepartment: (department: Department) ->
+   (vec EmployeeProfile) query;
+  listLocations: () -> (vec Location) query;
+  listMeetings: () -> (vec Meeting) query;
+  listMyAttendance: () -> (vec AttendanceRecord) query;
+  listMyNotifications: () -> (vec Notification) query;
+  listReviewsForEmployee: (employeeId: nat) -> (vec Review) query;
+  listTransactions: (txType: opt TransactionType, department: opt Department,
+   fromTs: opt Timestamp, toTs: opt Timestamp) -> (vec Transaction) query;
+  listTransactionsByDepartment: (department: Department) ->
+   (vec Transaction) query;
+  listUsers: () -> (vec UserProfile) query;
+  markAllNotificationsRead: () -> (nat);
+  markNotificationRead: (id: nat) -> (bool);
+  recordTransaction: (input: TransactionInput) -> (Transaction);
+  saveCallerUserProfile: (input: UserProfileInput) -> ();
+  sendNotification: (input: NotificationInput) -> (Notification);
+  submitReview: (input: ReviewInput) -> (Review);
+  updateEmployeeProfile: (id: nat, input: EmployeeProfileInput) ->
+   (opt EmployeeProfile);
+  updateLocation: (id: nat, input: LocationInput) -> (opt Location);
+  updateMeeting: (id: nat, input: MeetingInput) -> (opt Meeting);
+  updatePerformanceScore: (id: nat, score: float64) -> (bool);
+  updateUser: (id: principal, input: UserProfileInput) -> (opt UserProfile);
+}

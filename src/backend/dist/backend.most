@@ -1,0 +1,142 @@
+// Version: 1.0.0
+type AttendanceRecord__699091857 =
+  {
+    checkIn : Int;
+    checkOut : ?Int;
+    gpsLat : Float;
+    gpsLng : Float;
+    id : Nat;
+    userId : Principal
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type Department__825876972 = {#BAR; #BARBERSHOP; #GAS_STATION};
+type EmployeeProfile__660779112 =
+  {
+    department : Department__825876972;
+    id : Nat;
+    performanceScore : Float;
+    position : Text;
+    salary : Float;
+    userId : Principal
+  };
+type ExternalBlob__671167343 = Blob;
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Location__293756612 =
+  {gpsLat : Float; gpsLng : Float; id : Nat; name : Text; radius : Float};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Meeting__163776785 =
+  {
+    createdBy : Principal;
+    date : Int;
+    description : Text;
+    id : Nat;
+    participants : [Principal];
+    title : Text
+  };
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type Notification__264708741 =
+  {
+    createdAt : Int;
+    id : Nat;
+    isRead : Bool;
+    message : Text;
+    title : Text;
+    userId : Principal
+  };
+type Review__495074893 =
+  {
+    comments : Text;
+    date : Int;
+    employeeId : Nat;
+    id : Nat;
+    reviewedBy : Principal;
+    score : Float
+  };
+type Role__300349085 = {#ADMIN; #EMPLOYEE; #OWNER};
+type Timestamp__301639476 = Int;
+type TransactionType__430720328 = {#EXPENSE; #INCOME};
+type Transaction__367285679 =
+  {
+    amount : Float;
+    category : Text;
+    createdBy : Principal;
+    date : Timestamp__301639476;
+    department : Department__825876972;
+    id : Nat;
+    notes : Text;
+    transactionType : TransactionType__430720328
+  };
+type UserProfile__277265826 =
+  {
+    createdAt : Timestamp__301639476;
+    email : Text;
+    id : Principal;
+    isActive : Bool;
+    name : Text;
+    photoUrl : ExternalBlob__671167343;
+    role : Role__300349085
+  };
+type UserRole__1073662873 = {#admin; #guest; #user};
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1073662873>
+    };
+  stable attendanceRecords :
+    {
+      var root : Node__46230540<Nat, AttendanceRecord__699091857>;
+      var size : Nat__490723111
+    };
+  stable employees :
+    {
+      var root : Node__46230540<Nat, EmployeeProfile__660779112>;
+      var size : Nat__490723111
+    };
+  stable locations :
+    {
+      var root : Node__46230540<Nat, Location__293756612>;
+      var size : Nat__490723111
+    };
+  stable meetings :
+    {
+      var root : Node__46230540<Nat, Meeting__163776785>;
+      var size : Nat__490723111
+    };
+  stable var nextAttendanceId : Nat;
+  stable var nextEmployeeId : Nat;
+  stable var nextLocationId : Nat;
+  stable var nextMeetingId : Nat;
+  stable var nextNotificationId : Nat;
+  stable var nextReviewId : Nat;
+  stable var nextTransactionId : Nat;
+  stable notifications :
+    {
+      var root : Node__46230540<Nat, Notification__264708741>;
+      var size : Nat__490723111
+    };
+  stable reviews :
+    {
+      var root : Node__46230540<Nat, Review__495074893>;
+      var size : Nat__490723111
+    };
+  stable transactions :
+    {
+      var root : Node__46230540<Nat, Transaction__367285679>;
+      var size : Nat__490723111
+    };
+  stable users :
+    {
+      var root : Node__46230540<Principal, UserProfile__277265826>;
+      var size : Nat__490723111
+    }
+};

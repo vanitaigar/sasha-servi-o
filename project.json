@@ -1,0 +1,25 @@
+{
+  "overview": "SASHA SERVIÇO is a complete multi-sector business management system for a gas station, bar, and barbershop. It features role-based dashboards for owners, admins, and employees — with financial tracking, employee management, GPS attendance, meeting scheduling, reporting, and notifications.",
+  "features": [
+    "Role-based dashboards for Owner, Admin, and Employee",
+    "Financial management — income and expense tracking by department",
+    "Employee directory with profiles, performance scores, and photo uploads",
+    "GPS attendance check-in/out with browser geolocation",
+    "Meeting scheduling with participant management",
+    "Financial reports by day, week, month, or year with department breakdown",
+    "In-app notification center",
+    "Dark and light mode toggle",
+    "Supports 3 departments: Gas Station, Bar, and Barbershop"
+  ],
+  "category": "business-productivity",
+  "tags": [
+    "business-management",
+    "employee-management",
+    "financial-tracking",
+    "gps-attendance",
+    "reports",
+    "multi-sector",
+    "role-based-access"
+  ],
+  "last_updated": "2026-05-04T12:01:05.387Z"
+}
